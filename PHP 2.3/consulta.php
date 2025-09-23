@@ -21,7 +21,7 @@
             <?php
                 echo 'El alumno ';
                 echo $_POST['nombre'] .' , que tiene como email, '. $_POST['email'];
-                echo ' , Y ha marcado en el checkbox como : ' . ($_POST['checkbox'] ? 'Sí' : 'No');
+                echo $_POST['checkbox'] ? 'Sí' : 'No';
             ?>
 
             
