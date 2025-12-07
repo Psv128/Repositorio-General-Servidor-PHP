@@ -1,0 +1,154 @@
+/* ===============================
+   EXAMEN.CSS - VERSION CORREGIDA
+================================*/
+
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Evitar daños globales: Eliminado div{} que rompía todo */
+
+/* -----------------------------
+   CONTENEDORES & CENTRADOS
+----------------------------- */
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    text-align: center; /* Centrar textos generales */
+}
+
+.container,
+.pokemon-card,
+.header,
+footer,
+section {
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* -----------------------------
+   POKÉMON LISTA
+----------------------------- */
+
+.pokemon-card {
+    display: inline-block;
+    background: #ffffff;
+    width: 200px;
+    margin: 12px;
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease-in-out;
+}
+
+.pokemon-card:hover {
+    transform: scale(1.05);
+}
+
+.pokemon-img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+}
+
+.pokemon-name {
+    margin-top: 8px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.pokemon-id {
+    color: #777;
+    font-size: 14px;
+}
+
+/* -----------------------------
+   ICONOS DE TIPOS (RESTAURADO)
+----------------------------- */
+
+.type-icon {
+    width: 36px !important;
+    height: 36px !important;
+    display: inline-block !important;
+    object-fit: contain !important;
+    margin: 6px !important;
+    filter: drop-shadow(0px 0px 3px rgba(0,0,0,0.5)) !important;
+}
+
+/* Contenedor de tipos */
+.type-container {
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* -----------------------------
+   DETALLES DEL POKÉMON
+----------------------------- */
+
+.details-container {
+    max-width: 500px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 16px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.details-img {
+    width: 220px;
+    height: 220px;
+    object-fit: contain;
+}
+
+/* -----------------------------
+   BOTONES
+----------------------------- */
+.button,
+.back-btn {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #007bff;
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    margin: 12px auto;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.button:hover,
+.back-btn:hover {
+    background: #0056b3;
+}
+
+/* -----------------------------
+   Paginación
+----------------------------- */
+.pagination {
+    margin-top: 20px;
+}
+
+.pagination a {
+    padding: 8px 14px;
+    margin: 4px;
+    background: #ddd;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.pagination a:hover {
+    background: #bbb;
+}
+
+/* -----------------------------
+   Footer
+----------------------------- */
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    background: #222;
+    color: white;
+}
