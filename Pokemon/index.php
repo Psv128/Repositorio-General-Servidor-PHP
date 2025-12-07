@@ -1,13 +1,4 @@
 <?php
-/* Versión revisada completamente
-   - Gradiente continuo en TODA la página (solo aplicado en body)
-   - Eliminadas líneas blancas (divs fantasmas y backgrounds heredados)
-   - Footer SIEMPRE empujado hacia abajo
-   - Pokémon bien distribuidos y nunca solapados
-   - Botón “Siguiente” SIEMPRE visible y debajo del grid
-   - detalles.php rediseñado completamente para evitar solapamientos
-   - Sin JS (solo PHP + HTML + CSS)
-*/
 
 // Mapeo regiones → pokedex
 $regionDex = [
@@ -61,7 +52,7 @@ main {
     padding-bottom: 60px;
 }
 
-/* Eliminar TODAS las líneas blancas generadas por divs genéricos */
+
 div {
     background: transparent !important;
     border: none !important;
@@ -173,3 +164,4 @@ Trabajo <strong>Desarrollo Web en Entorno Servidor</strong> 2023/2024 IES Serra 
 </footer>
 </body>
 </html>
+
