@@ -1,19 +1,11 @@
-/* ===============================
-   EXAMEN.CSS - VERSION CORREGIDA
-================================*/
 
-/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* Evitar daños globales: Eliminado div{} que rompía todo */
 
-/* -----------------------------
-   CONTENEDORES & CENTRADOS
------------------------------ */
 body {
     font-family: Arial, sans-serif;
     background: #f5f5f5;
@@ -66,7 +58,7 @@ section {
 }
 
 /* -----------------------------
-   ICONOS DE TIPOS (RESTAURADO)
+   ICONOS DE TIPOS 
 ----------------------------- */
 
 .type-icon {
@@ -152,3 +144,4 @@ footer {
     background: #222;
     color: white;
 }
+
