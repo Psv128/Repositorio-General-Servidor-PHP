@@ -1,4 +1,13 @@
 <?php
+/* Versión revisada completamente
+   - Gradiente continuo en TODA la página (solo aplicado en body)
+   - Eliminadas líneas blancas (divs fantasmas y backgrounds heredados)
+   - Footer SIEMPRE empujado hacia abajo
+   - Pokémon bien distribuidos y nunca solapados
+   - Botón “Siguiente” SIEMPRE visible y debajo del grid
+   - detalles.php rediseñado completamente para evitar solapamientos
+   - Sin JS (solo PHP + HTML + CSS)
+*/
 
 // Mapeo regiones → pokedex
 $regionDex = [
@@ -52,7 +61,7 @@ main {
     padding-bottom: 60px;
 }
 
-
+/* Eliminar TODAS las líneas blancas generadas por divs genéricos */
 div {
     background: transparent !important;
     border: none !important;
@@ -120,6 +129,36 @@ div {
 </strong>
 </nav>
 
+<!-- Search / Filter form -->
+<nav style="margin-top:12px;">
+    <form method="get" action="index.php" id="search-form" style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+        <input type="text" name="q" placeholder="Buscar por nombre..." value="<?= htmlspecialchars($_GET['q'] ?? '') ?>" style="padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);width:240px;" />
+        <select name="type" style="padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);">
+            <option value="any">-- Tipo (todos) --</option>
+            <?php
+            $typesList = ["water","fire","ice","steel","bug","grass","dark","psychic","fairy","ground","rock","poison","electric","fighting","flying","dragon","ghost","normal"];
+            $selectedType = $_GET['type'] ?? 'any';
+            foreach($typesList as $t) {
+                $sel = ($selectedType === $t) ? 'selected' : '';
+                echo "<option value=\"$t\" $sel>" . ucfirst($t) . "</option>";
+            }
+            ?>
+        </select>
+        <select name="region" style="padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.15);">
+            <option value="">-- Región (todas) --</option>
+            <?php
+            $regions = array_keys($regionDex);
+            $selRegion = $_GET['region'] ?? '';
+            foreach($regions as $r) {
+                $sel = ($selRegion === $r) ? 'selected' : '';
+                echo "<option value=\"$r\" $sel>" . ucfirst($r) . "</option>";
+            }
+            ?>
+        </select>
+        <button type="submit" style="padding:8px 14px;border-radius:10px;background:#ffcc66;border:none;font-weight:bold;">Buscar</button>
+    </form>
+</nav>
+
 <main>
 <?php if ($region): ?>
 <h2 style="text-align:center; color:white; text-shadow:0 0 6px black; margin-top:25px;">
@@ -130,15 +169,54 @@ div {
 <div id="pokemon-grid">
 <?php
 if ($pokemonList) {
+    // Filters from form
+    $q = strtolower(trim($_GET['q'] ?? ''));
+    $typeFilter = $_GET['type'] ?? 'any';
+
+    // Build filtered list (will fetch details only when necessary)
+    $filtered = [];
+    foreach ($pokemonList as $entry) {
+        $speciesName = strtolower($entry['pokemon_species']['name'] ?? '');
+
+        // Name filter
+        if ($q !== '' && strpos($speciesName, $q) === false) {
+            continue;
+        }
+
+        // Type filter: need to fetch pokemon detail to check types
+        if ($typeFilter !== 'any') {
+            $url = str_replace("pokemon-species", "pokemon", $entry['pokemon_species']['url']);
+            $pjson = @file_get_contents($url);
+            if ($pjson === false) continue;
+            $poke = json_decode($pjson, true);
+            if (!$poke) continue;
+
+            $typesNames = array_map(fn($t) => $t['type']['name'], $poke['types']);
+            if (!in_array($typeFilter, $typesNames, true)) {
+                continue;
+            }
+
+            // store detail to avoid refetching later
+            $entry['_poke'] = $poke;
+        }
+
+        $filtered[] = $entry;
+    }
+
+    // Pagination on filtered list
     $start = ($page - 1) * $batch;
-    $slice = array_slice($pokemonList, $start, $batch);
+    $slice = array_slice($filtered, $start, $batch);
 
     foreach ($slice as $entry) {
-        $url = str_replace("pokemon-species", "pokemon", $entry['pokemon_species']['url']);
-        $pjson = @file_get_contents($url);
-        if ($pjson === false) continue;
-        $poke = json_decode($pjson, true);
-        if (!$poke) continue;
+        if (isset($entry['_poke'])) {
+            $poke = $entry['_poke'];
+        } else {
+            $url = str_replace("pokemon-species", "pokemon", $entry['pokemon_species']['url']);
+            $pjson = @file_get_contents($url);
+            if ($pjson === false) continue;
+            $poke = json_decode($pjson, true);
+            if (!$poke) continue;
+        }
 
         echo "<a href='detalles.php?id={$poke['id']}' target='_blank' class='pokemon-card'>";
         echo "<h3>" . strtoupper(htmlspecialchars($poke['name'])) . "</h3>";
@@ -151,8 +229,17 @@ if ($pokemonList) {
 
 <?php if ($region): ?>
 <div class="pagination">
-<?php if ($start + $batch < count($pokemonList)): ?>
-    <a href="?region=<?= $region ?>&page=<?= $page + 1 ?>">Siguiente ➜</a>
+<?php
+    $totalCount = isset($filtered) ? count($filtered) : count($pokemonList);
+    if ($start + $batch < $totalCount):
+        $qs = [];
+        if ($region) $qs['region'] = $region;
+        if (!empty($_GET['q'])) $qs['q'] = $_GET['q'];
+        if (!empty($_GET['type']) && $_GET['type'] !== 'any') $qs['type'] = $_GET['type'];
+        $qs['page'] = $page + 1;
+        $query = http_build_query($qs);
+?>
+    <a href="?<?= $query ?>">Siguiente ➜</a>
 <?php endif; ?>
 </div>
 <?php endif; ?>
@@ -164,4 +251,3 @@ Trabajo <strong>Desarrollo Web en Entorno Servidor</strong> 2023/2024 IES Serra 
 </footer>
 </body>
 </html>
-

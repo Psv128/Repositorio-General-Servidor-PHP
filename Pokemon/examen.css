@@ -1,11 +1,19 @@
+/* ===============================
+   EXAMEN.CSS - VERSION CORREGIDA
+================================*/
 
+/* Reset básico */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Evitar daños globales: Eliminado div{} que rompía todo */
 
+/* -----------------------------
+   CONTENEDORES & CENTRADOS
+----------------------------- */
 body {
     font-family: Arial, sans-serif;
     background: #f5f5f5;
@@ -58,7 +66,7 @@ section {
 }
 
 /* -----------------------------
-   ICONOS DE TIPOS 
+   ICONOS DE TIPOS (RESTAURADO)
 ----------------------------- */
 
 .type-icon {
@@ -145,3 +153,13 @@ footer {
     color: white;
 }
 
+/* Search form in nav */
+#search-form input[type="text"],
+#search-form select {
+    font-size: 14px;
+}
+
+@media (max-width:600px) {
+    #search-form { flex-direction: column; align-items: stretch; }
+    #search-form input[type="text"] { width: 100% !important; }
+}
